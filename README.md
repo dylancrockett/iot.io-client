@@ -1,5 +1,5 @@
-# IoT Manager
-### Overview
+# iot.io Client
+### iot.io Overview
 This project aims to create a lightweight and intuitive system for connecting
 IoT devices to a central server for small IoT system implementations and hobbyists.
 
