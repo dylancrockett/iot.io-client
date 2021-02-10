@@ -16,39 +16,41 @@ This is an example of a simple IoTClient instance which connects to a server acc
 
 ```python
 from iotio_client import IoTClient
-import asyncio
-import logging
+import threading
+import time
+
+# create client
+client = IoTClient("echo_test_client", "echo")
 
 
-# create an instance of our client
-client = IoTClient("test_client", "echo", {}, logging_level=logging.DEBUG)
+# define a handler for "echo_response" events
+@client.on("echo_response")
+def echo(data):
+    print("'echo_response' from Server: '" + str(data) + "'\n")
 
 
-# define a handler for the server's response
-@client.on("message")
-async def test(message):
-    print(message)
+def send():
+    client.ensure_open()
+
+    # loop while client is connected
+    while client.connected:
+        message = input("Enter a value to send to the server: ")
+
+        # send message over the echo channel
+        client.send("echo", message)
+        print("")
+        time.sleep(1)
 
 
-# define a coroutine for pinging the server at a 5 second interval
-async def ping():
-    # wait until the client is ready before sending a message
-    await client.wait_until_ready()
+# start background send task
+send_thread = threading.Thread(None, send)
+send_thread.start()
 
-    while True:
-        await client.send("message", "hello")
-        await asyncio.sleep(5)
-
-
-# initialize the client and ping coroutine
-if __name__ == "__main__":
-    # run the coroutine
-    client.loop.create_task(ping())
-
-    # run the client
-    client.run("localhost:5000")
+# connect client
+client.run("localhost:5000", use_tls=False)
+send_thread.join()
 ```
 
-If you would like to see the matching quickstart guide for an example
+If you would like to see the matching quick-start guide for an example
 server go [here](https://github.com/dylancrockett/iot.io).
 
