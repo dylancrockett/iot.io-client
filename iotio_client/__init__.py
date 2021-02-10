@@ -1,5 +1,5 @@
-from .IoTClient import IoTClient
-
+from .Client import IoTClient
+from .Endpoint import EndpointInfo, EndpointType, EndpointConstraint
 
 __title = "iot.io-client"
 __author__ = "Dylan Crockett"

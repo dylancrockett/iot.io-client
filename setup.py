@@ -25,7 +25,7 @@ setup(
         "Operating System :: OS Independent"
     ],
     install_requires=[
-        'websockets'
+        'websockets', 'websocket-client'
     ],
     python_requires='>=3.7'
 )
